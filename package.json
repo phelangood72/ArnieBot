@@ -1,0 +1,14 @@
+{
+  "name": "arniebot",
+  "version": "1.0.0",
+  "description": "Playing around with a bot.",
+  "main": "ArnieBot.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "PhelanGood",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}
