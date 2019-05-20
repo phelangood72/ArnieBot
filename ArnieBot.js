@@ -38,14 +38,14 @@ client.on('ready', () => console.log(`Logged in as ${client.user.tag}!`));
 
 client.on('message', msg => {
   var isCommand = msg.content.charAt(0) === '$';
-  isCommand = isCommand || msg.content.startsWith('Arnie');
+  isCommand = isCommand || msg.content.toLowerCase().startsWith('arnie');
   if (!isCommand) return;
 
   var findCommand = '';
   if (msg.content.charAt(0) === '$') {
     var args = msg.content.substring(1).split(' ');
     findCommand = args[0];
-  } else if (msg.content.startsWith('Arnie')) {
+  } else if (msg.content.toLowerCase().startsWith('arnie')) {
     var args = msg.content.split(' ');
     findCommand = args[1];
   }
