@@ -47,7 +47,8 @@ client.on('message', msg => {
     findCommand = args[0];
   } else if (msg.content.toLowerCase().startsWith('arnie')) {
     var args = msg.content.split(' ');
-    findCommand = args[1];
+    args.shift();
+    findCommand = args.join(' ');
   }
 
   const command = findCommand;
@@ -64,6 +65,8 @@ client.on('message', msg => {
     }
     console.log(msg.mentions.members.first());
     msg.reply(`Congrats! You have succesfully committed first degree murder by killing ${args[1]}!`);
+  } else if (command === 'what\'s in your mouth?') {
+    msg.reply('*runs away*');
   } else if (command === 'help' || command === '?') {
     replyString = formatHelp();
     msg.reply(replyString);
