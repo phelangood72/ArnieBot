@@ -37,10 +37,25 @@ let client = new Discord.Client();
 client.on('ready', () => console.log(`Logged in as ${client.user.tag}!`));
 
 client.on('message', msg => {
-  if (msg.content.charAt(0) !== '$') return;
+  var isCommand = msg.content.charAt(0) === '$';
+  isCommand = isCommand || msg.content.toLowerCase().startsWith('arnie');
+  if (!isCommand) return;
 
-  const args = msg.content.substring(1).split(' ');
-  const command = args[0];
+  var findCommand = '';
+  if (msg.content.charAt(0) === '$') {
+    var args = msg.content.substring(1).split(' ');
+    findCommand = args[0];
+  } else if (msg.content.toLowerCase().startsWith('arnie')) {
+    var args = msg.content.split(' ');
+    args.shift();
+    findCommand = args.join(' ');
+  }
+
+  const command = findCommand;
+  if (!command) {
+    msg.reply('You need to tell me what to do. Try \'$help\' or \'Arnie help\' to learn what I can do.');
+    return;
+  }
 
   if (command === 'ping') {
     msg.reply('pong');
@@ -50,6 +65,8 @@ client.on('message', msg => {
     }
     console.log(msg.mentions.members.first());
     msg.reply(`Congrats! You have succesfully committed first degree murder by killing ${args[1]}!`);
+  } else if (command === 'what\'s in your mouth?') {
+    msg.reply('*runs away*');
   } else if (command === 'help' || command === '?') {
     replyString = formatHelp();
     msg.reply(replyString);
