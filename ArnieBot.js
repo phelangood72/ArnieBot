@@ -1,6 +1,13 @@
 const Discord = require('discord.js');
-const auth = require('./auth.json');
+const fs = require('fs');
 
+const path = './auth.json';
+var auth = ''
+if (fs.existsSync(path)) {
+  auth = require('./auth.json');
+} else {
+  auth = process.env.TOKEN;
+}
 
 function formatHelp(){
   const replyString = `
