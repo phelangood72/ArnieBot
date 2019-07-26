@@ -1,6 +1,9 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
+const botLords = []
+botLords.push(process.env.THOMAS_ID)
+botLords.push(process.env.ALEX_ID)
 const path = './auth.json';
 var auth = ''
 if (fs.existsSync(path)) {
@@ -45,7 +48,8 @@ client.on('ready', () => console.log(`Logged in as ${client.user.tag}!`));
 
 client.on('message', msg => {
   var isCommand = msg.content.charAt(0) === '$';
-  isCommand = isCommand || msg.content.toLowerCase().startsWith('arnie');
+  isCommand = isCommand ||
+    msg.content.toLowerCase().startsWith('arnie');
   if (!isCommand) return;
 
   var findCommand = '';
@@ -57,12 +61,29 @@ client.on('message', msg => {
     args.shift();
     findCommand = args.join(' ');
   }
+  console.log(msg.author.id);
+  admin = botLords.includes(msg.author.id)
 
   const command = findCommand;
   if (!command) {
     msg.reply('You need to tell me what to do. Try \'$help\' or \'Arnie help\' to learn what I can do.');
     return;
   }
+
+  /*
+  *   This area is for testing commands in a deployment.
+  */
+  if (admin) {
+    if (command === 'this') {
+      msg.reply('that');
+    } else {
+      msg.reply('Oops! Unknown testing command input - please try again!');
+    }
+  }
+
+  /*
+  *   This area is for production ready commands.
+  */
 
   if (command === 'ping') {
     msg.reply('pong');
@@ -81,5 +102,6 @@ client.on('message', msg => {
     msg.reply('Oops! Unknown command input - please try again!');
   }
 });
+
 
 client.login(auth.token);
