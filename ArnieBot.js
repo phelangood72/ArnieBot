@@ -79,8 +79,6 @@ client.on('message', msg => {
   if (admin) {
     if (command === 'this') {
       msg.reply('that');
-    } else {
-      msg.reply('Oops! Unknown testing command input - please try again!');
     }
   }
 
