@@ -1,15 +1,18 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
-const botLords = []
-botLords.push(process.env.THOMAS_ID)
-botLords.push(process.env.ALEX_ID)
 const path = './auth.json';
-var auth = ''
+var token = '';
+const botLords = [];
 if (fs.existsSync(path)) {
-  auth = require('./auth.json');
+  authJson = require('./auth.json');
+  token = authJson.token;
+  botLords.push(authJson.thomas_id);
+  botLords.push(authJson.alex_id);
 } else {
-  auth = process.env.TOKEN;
+  token = process.env.TOKEN;
+  botLords.push(process.env.THOMAS_ID);
+  botLords.push(process.env.ALEX_ID);
 }
 
 function formatHelp(){
@@ -103,5 +106,9 @@ client.on('message', msg => {
   }
 });
 
-
-client.login(auth.token);
+try {
+  client.login(token);
+} catch (e) {
+  console.log(e)
+  console.log('You probably have the wrong Discord API key.')
+}
