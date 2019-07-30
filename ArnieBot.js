@@ -22,13 +22,15 @@ function formatHelp(){
     I'm ArnieBot!
 
     Here's a list of things I can do!
-    -------------------------------------------------------------
+    
+    \`\`\`
     Help:
       Output this helpful information about what I can do!
 
       Aliases: $?
       Usage: $help
-    -------------------------------------------------------------
+    \`\`\`
+    \`\`\`
     Kill:
       Commit murder on one of the other members of the current
       channel!
@@ -36,13 +38,14 @@ function formatHelp(){
       Aliases: None
       Usage: $kill [user]
       Example: $kill @username
-    -------------------------------------------------------------
+    \`\`\`
+    \`\`\`
     Ping:
       Make sure I'm working with a quick game of ping pong!
 
       Aliases: None
       Usage: $ping
-    -------------------------------------------------------------
+    \`\`\`
   `;
   return replyString;
 }
