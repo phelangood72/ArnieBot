@@ -1,9 +1,11 @@
 const Discord = require('discord.js');
 const fs = require('fs');
+const winston = require('./config/winston.js'); // Logger
 
 const path = './auth.json';
 var token = '';
-const botLords = [];
+const botLords = []; // "Admins"
+// Use json for local and environment variables for Heroku
 if (fs.existsSync(path)) {
   authJson = require('./auth.json');
   token = authJson.token;
@@ -51,6 +53,7 @@ client.on('ready', () => console.log(`Logged in as ${client.user.tag}!`));
 
 client.on('message', msg => {
   var isCommand = msg.content.charAt(0) === '$';
+  var isTestCommand = false;
   isCommand = isCommand ||
     msg.content.toLowerCase().startsWith('arnie');
   if (!isCommand) return;
@@ -64,7 +67,9 @@ client.on('message', msg => {
     args.shift();
     findCommand = args.join(' ');
   }
-  console.log(msg.author.id);
+  // Trying to be a good dev and log
+  winston.info('Command from %s: %s', msg.author.username, msg.author.id);
+  // Only certain people should be able to use test commands
   admin = botLords.includes(msg.author.id)
 
   const command = findCommand;
@@ -78,6 +83,7 @@ client.on('message', msg => {
   */
   if (admin) {
     if (command === 'this') {
+      isTestCommand = true;
       msg.reply('that');
     }
   }
@@ -100,13 +106,16 @@ client.on('message', msg => {
     replyString = formatHelp();
     msg.reply(replyString);
   } else {
-    msg.reply('Oops! Unknown command input - please try again!');
+    // Don't want to this see if we're using a test command
+    if (!isTestCommand) {
+      msg.reply('Oops! Unknown command input - please try again!');
+    }
   }
 });
 
 try {
   client.login(token);
 } catch (e) {
-  console.log(e)
-  console.log('You probably have the wrong Discord API key.')
+  winston.debug(e)
+  winston.debug('You probably have the wrong Discord API key.')
 }

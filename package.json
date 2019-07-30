@@ -11,7 +11,8 @@
   "author": "PhelanGood",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.4.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
