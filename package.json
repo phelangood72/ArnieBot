@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.4.2",
+    "mongodb": "^3.3.0-beta2",
     "winston": "^3.2.1"
   },
   "devDependencies": {

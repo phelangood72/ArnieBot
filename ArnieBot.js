@@ -1,9 +1,12 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const winston = require('./config/winston.js'); // Logger
+const MongoClient = require('mongodb').MongoClient;
 
 const path = './auth.json';
 var token = '';
+var dbUsername;
+var dbPassword;
 const botLords = []; // "Admins"
 // Use json for local and environment variables for Heroku
 if (fs.existsSync(path)) {
@@ -11,11 +14,23 @@ if (fs.existsSync(path)) {
   token = authJson.token;
   botLords.push(authJson.thomas_id);
   botLords.push(authJson.alex_id);
+
+  dbUsername = authJson.dbUser;
+  dbPassword = authJson.dbPassword
 } else {
   token = process.env.TOKEN;
   botLords.push(process.env.THOMAS_ID);
   botLords.push(process.env.ALEX_ID);
 }
+
+const uri = `mongodb+srv://${dbUsername}:${dbPassword}@arniebot-smese.mongodb.net/test?retryWrites=true&w=majority`;
+//const uri = 'mongodb://localhost:27017';
+const dbClient = new MongoClient(uri, { useNewUrlParser: true });
+dbClient.connect(err => {
+  const collection = dbClient.db("test").collection("devices");
+  // perform actions on the collection object
+  dbClient.close();
+});
 
 function formatHelp(){
   const replyString = `
