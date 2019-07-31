@@ -21,6 +21,9 @@ if (fs.existsSync(path)) {
   token = process.env.TOKEN;
   botLords.push(process.env.THOMAS_ID);
   botLords.push(process.env.ALEX_ID);
+
+  dbUsername = process.env.DBUSERNAME;
+  dbPassword = process.env.DPBPASSWORD;
 }
 
 const uri = `mongodb+srv://${dbUsername}:${dbPassword}@arniebot-smese.mongodb.net/test?retryWrites=true&w=majority`;
