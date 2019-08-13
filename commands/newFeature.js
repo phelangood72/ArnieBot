@@ -4,6 +4,7 @@ const CONST = require('../const.js');
 const axios = require('axios');
 
 const path = './auth.json';
+var githubToken = '';
 if (fs.existsSync(path)) {
   authJson = require('../auth.json');
   githubToken = authJson.githubToken;
@@ -16,8 +17,8 @@ function newFeature(command, author){
   // First match is the whole string, second match is called vs. named
   var featureTitle = matches[2];
   var featureDescription = matches[3];
-  featureDescription = `
-  \'${featureDescription}\'
+  var featureBody = `
+  ${featureDescription}
   -
   ${author}
   `;
@@ -25,7 +26,7 @@ function newFeature(command, author){
   axios.post('https://api.github.com/repos/phelangood72/ArnieBot/issues',
     { // Data
       'title': featureTitle,
-      'body': featureDescription,
+      'body': featureBody,
       'labels': [
         'enhancement'
       ]
@@ -35,7 +36,7 @@ function newFeature(command, author){
         'Authorization': 'token ' + githubToken
       }
     }).then(function(response) {
-      winston.info('[newFeature] %s', response);
+      winston.error('[newFeature] Issue has been created in GitHub for %s', featureTitle);
     }).catch(function(error) {
       winston.error('[newFeature] %s', error);
     });

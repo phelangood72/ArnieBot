@@ -98,7 +98,7 @@ client.on('message', msg => {
   */
 
   if (admin) {
-    if (CONST['newFeatureRE'].test(command)) {
+    if (CONST.newFeatureRE.test(command)) {
       isTestCommand = true;
       var replyString = newFeature(command, msg.author.username);
       msg.reply(replyString);
