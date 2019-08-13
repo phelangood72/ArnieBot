@@ -1,6 +1,10 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const winston = require('./config/winston.js'); // Logger
+const CONST = require('./const.js');
+
+// Command importing
+const newFeature = require('./commands/newFeature.js');
 
 const path = './auth.json';
 var token = '';
@@ -22,7 +26,7 @@ function formatHelp(){
     I'm ArnieBot!
 
     Here's a list of things I can do!
-    
+
     \`\`\`
     Help:
       Output this helpful information about what I can do!
@@ -38,6 +42,13 @@ function formatHelp(){
       Aliases: None
       Usage: $kill [user]
       Example: $kill @username
+    \`\`\`
+    \`\`\`
+    New Feature:
+      Ask for a new feature in ArnieBot!
+
+      Aliases: None
+      Usage: Arnie I want a new feature called *feature name* that *description of what the new feature does*
     \`\`\`
     \`\`\`
     Ping:
@@ -70,8 +81,6 @@ client.on('message', msg => {
     args.shift();
     findCommand = args.join(' ');
   }
-  // Trying to be a good dev and log
-  winston.info('Command from %s: %s', msg.author.username, msg.author.id);
   // Only certain people should be able to use test commands
   admin = botLords.includes(msg.author.id)
 
@@ -81,13 +90,18 @@ client.on('message', msg => {
     return;
   }
 
+  // Trying to be a good dev and log
+  winston.info('Command \'%s\' from %s: %s', command, msg.author.username, msg.author.id);
+
   /*
   *   This area is for testing commands in a deployment.
   */
+
   if (admin) {
-    if (command === 'this') {
+    if (CONST['newFeatureRE'].test(command)) {
       isTestCommand = true;
-      msg.reply('that');
+      var replyString = newFeature(command, msg.author.username);
+      msg.reply(replyString);
     }
   }
 
