@@ -1,9 +1,15 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const winston = require('./config/winston.js'); // Logger
+const MongoClient = require('mongodb').MongoClient;
+const CONST = require('./const.js');
 
+// Command importing
+const newFeature = require('./commands/newFeature.js');
 const path = './auth.json';
 var token = '';
+var dbUsername;
+var dbPassword;
 const botLords = []; // "Admins"
 // Use json for local and environment variables for Heroku
 if (fs.existsSync(path)) {
@@ -11,18 +17,33 @@ if (fs.existsSync(path)) {
   token = authJson.token;
   botLords.push(authJson.thomas_id);
   botLords.push(authJson.alex_id);
+
+  dbUsername = authJson.dbUser;
+  dbPassword = authJson.dbPassword
 } else {
   token = process.env.TOKEN;
   botLords.push(process.env.THOMAS_ID);
   botLords.push(process.env.ALEX_ID);
+
+  dbUsername = process.env.DBUSERNAME;
+  dbPassword = process.env.DPBPASSWORD;
 }
+
+const uri = `mongodb+srv://${dbUsername}:${dbPassword}@arniebot-smese.mongodb.net/test?retryWrites=true&w=majority`;
+//const uri = 'mongodb://localhost:27017';
+const dbClient = new MongoClient(uri, { useNewUrlParser: true });
+dbClient.connect(err => {
+  const collection = dbClient.db("test").collection("devices");
+  // perform actions on the collection object
+  dbClient.close();
+});
 
 function formatHelp(){
   const replyString = `
     I'm ArnieBot!
 
     Here's a list of things I can do!
-    
+
     \`\`\`
     Help:
       Output this helpful information about what I can do!
@@ -38,6 +59,13 @@ function formatHelp(){
       Aliases: None
       Usage: $kill [user]
       Example: $kill @username
+    \`\`\`
+    \`\`\`
+    New Feature:
+      Ask for a new feature in ArnieBot!
+
+      Aliases: None
+      Usage: Arnie I want a new feature called *feature name* that *description of what the new feature does*
     \`\`\`
     \`\`\`
     Ping:
@@ -70,8 +98,6 @@ client.on('message', msg => {
     args.shift();
     findCommand = args.join(' ');
   }
-  // Trying to be a good dev and log
-  winston.info('Command from %s: %s', msg.author.username, msg.author.id);
   // Only certain people should be able to use test commands
   admin = botLords.includes(msg.author.id)
 
@@ -81,13 +107,18 @@ client.on('message', msg => {
     return;
   }
 
+  // Trying to be a good dev and log
+  winston.info('Command \'%s\' from %s: %s', command, msg.author.username, msg.author.id);
+
   /*
   *   This area is for testing commands in a deployment.
   */
+
   if (admin) {
-    if (command === 'this') {
+    if (CONST.newFeatureRE.test(command)) {
       isTestCommand = true;
-      msg.reply('that');
+      var replyString = newFeature(command, msg.author.username);
+      msg.reply(replyString);
     }
   }
 
